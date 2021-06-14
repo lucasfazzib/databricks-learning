@@ -1,0 +1,115 @@
+LAKEHOUSE
+
+    - Implements data warewouses infrastructures and data lake
+
+
+- BENEFITS
+
+    - Separation od compute and storage
+    - Infinite storage capacity
+    - Leverage best aspects of a data warehouse
+    - Low data gravity
+    - High data throughput
+    - No limits on data structure
+    - Mix batch and streaming workloads
+
+
+DELTA LAKE
+
+    - Technology designed to be used with apache spark to build robust data lakes
+
+    - Work with apache spark
+
+    - ACID compliant ( Consistency guarantee)
+
+    - Roust data store
+
+FEATURES DELTA LAKE
+    
+    -ACID transactions on spark
+    - Scalable metadata handling
+    - Streaming and batch handling
+    - Schema Enforcement
+    - Time travel
+    - Upserts and deletes
+    - Fully configurable/optimizable
+    - Struuctured streaming support
+
+
+
+PLANNING YOUR DATA PIPELINE
+
+    - Where is the data coming from ?
+    - How much data exists?
+    - What is the type of data?
+    - What are the SLA requirements atoun dhow it will be used ?
+    - How frequentyl is it updated?
+    - What kind of inconsistencies or uncertainties might you antecipate?
+    - What might the raw -> bronze -> silver -> gold levels look like ?
+
+
+    OPERAITONS file
+
+        - create_stream_writer
+        - read_stream_delta
+        - read_stream_raw
+        - update_silver_table
+        - transform_bronze
+        - transform_raw
+        - transform_silver_mean_agg_last_thirty...
+
+    
+
+
+
+
+STEPS TO BUILD PIPELINE
+
+    - RAW_TO_BRONZE
+    - BRONZE_TO_SILVER
+    - SILVER_TO_GOLD
+
+RAW TO BRONZE
+    - Event lan in kafka or other sources
+    - Read JSON from KAFKA as a raw string
+    - Write the raw string with metadata to the bronze table
+    - Parse the raw string as nested JSON
+    - Write the parsed JSON to silver table
+
+    example:
+
+        raw_df.writeStream
+            .format("delta")
+            .outputMode("append")
+            .option("checkpointLocation", bronzeCheckpoint)
+            .start(bronzePath)
+
+
+    CREATE BRONZE TABLE IN THE METASTORE:
+
+        CREATE TABLE events (
+            date DATE,
+            eventId STRING,
+            eventType STRING,
+            DATA string )
+        USING DELTA 
+        PARTITIONED BY (date)
+        LOCATION '/mnt/delta/events'
+
+
+-----
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
